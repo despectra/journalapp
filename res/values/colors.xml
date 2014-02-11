@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="login_background">#030303</color>
+    <color name="profile">#cfcfcf</color>
+    <color name="menu_text">#222222</color>
+</resources>
