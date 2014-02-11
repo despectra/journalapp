@@ -30,7 +30,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends ReceivableActivity {
+public class MainActivity extends Activity {
 
 	public static final String[] USER_DATA_PREFS_KEYS = new String[]{"token", "uid", "name", "surname", "middlename", "level", "avatar"};
 	

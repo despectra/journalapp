@@ -20,7 +20,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-public class AuthActivity extends ReceivableActivity implements OnClickListener, OnEditorActionListener {
+public class AuthActivity extends Activity implements OnClickListener, OnEditorActionListener {
 
 	public static final String BACKGROUND_FRAGMENT_TAG = "login_fragment";
 	
