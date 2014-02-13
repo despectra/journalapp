@@ -65,11 +65,7 @@ public class MainActivity extends Activity {
 		getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
 		readNewPreferences();
-		try {
-			loadAvatar();
-		} catch (FileNotFoundException e) {
-			Toast.makeText(this, "Avatar not found", Toast.LENGTH_SHORT).show();
-		}
+		loadAvatar();
 	}
 	
 	@Override
@@ -87,35 +83,23 @@ public class MainActivity extends Activity {
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch(item.getItemId()) {
-		case R.id.action_logout:
-			deleteFile(BackgroundService.AVATAR_FILENAME);
-			PreferencesManager.clearPreferences(this, USER_DATA_PREFS_KEYS);
-			Intent intent = new Intent(this, AuthActivity.class);
-			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(intent);
-			break;
-		}
-		return true;
+		return super.onOptionsItemSelected(item);
 	}
 	
-	private void readNewPreferences() {
-		SharedPreferences prefs = getSharedPreferences(PreferencesManager.USER_DATA_PREFS, MODE_PRIVATE);
-		mToken = prefs.getString("token", "");
-		mUserId = Integer.valueOf(prefs.getString("uid", ""));
-		mName = prefs.getString("name", "");
-		mSurname = prefs.getString("surname", "");
-		mMiddlename = prefs.getString("middlename", "");
-		mLevel = prefs.getString("level", "");
-		mAvatar = prefs.getString("avatar", "");
+	private void readNewPreferences() {		
+		mToken = "OMG";
+		mUserId = 1;
+		mName = "Dmitry";
+		mSurname = "Shvedchikov";
+		mMiddlename = "Igorevich";
+		mLevel = "4096";
+		mAvatar = "404";
 		
 		getActionBar().setTitle(mSurname);
-		getActionBar().setSubtitle(String.format("%s %s", mName, mMiddlename));		
+		getActionBar().setSubtitle(String.format("%s %s", mName, mMiddlename));
 	}
 	
-	private void loadAvatar() throws FileNotFoundException {
-		Bitmap ava = BitmapFactory.decodeStream(openFileInput(BackgroundService.AVATAR_FILENAME));
-		getActionBar().setLogo(new BitmapDrawable(ava));
-		
+	private void loadAvatar() {
+		getActionBar().setLogo(R.drawable.test_ava);
 	}
 }

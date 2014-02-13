@@ -10,20 +10,20 @@
         android:id="@+id/content_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-    	android:orientation="vertical"
+    	android:orientation="horizontal"
     	android:padding="40dp" >
             
        	<com.despectra.android.classjournal_new.TitledCard
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            journalviews:title="Текущиее расписание" >
+            journalviews:title="Расписание на день" >
             
             <RelativeLayout 
                 android:id="@+id/test_sched_item"
-                android:layout_width="500dp"
+                android:layout_width="400dp"
                 android:layout_height="80dp"
                 android:background="@color/lesson_completed_background"
-                android:layout_margin="5dp">
+                android:layout_margin="5dp" >
                 
                 <TextView
                     android:id="@+id/subject_view"
@@ -81,17 +81,17 @@
                     android:paddingTop="7dp"
                     android:textColor="@color/gray_85"
                     android:text="Класс 8 '45'"/>
-                
+
             </RelativeLayout>
             
             <RelativeLayout 
                 android:id="@+id/test_sched_item"
-                android:layout_width="500dp"
+                android:layout_width="400dp"
                 android:layout_height="80dp"
-                android:background="@color/lesson_current_background"
+                android:background="@drawable/lesson_current_drawable"
                 android:layout_margin="5dp"
                 android:layout_marginTop="0dp">
-                
+
                 <TextView
                     android:id="@+id/subject_view"
                     android:layout_width="wrap_content"
@@ -151,9 +151,9 @@
                 
             <RelativeLayout 
                 android:id="@+id/test_sched_item"
-                android:layout_width="500dp"
+                android:layout_width="400dp"
                 android:layout_height="80dp"
-                android:background="@color/lesson_future_background"
+                android:background="@drawable/lesson_future_drawable"
                 android:layout_margin="5dp"
                 android:layout_marginTop="0dp">
                 
@@ -231,5 +231,3 @@
         android:background="#dfdfdf" />
     
 </android.support.v4.widget.DrawerLayout>
-
-

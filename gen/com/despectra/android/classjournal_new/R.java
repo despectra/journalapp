@@ -9,8 +9,26 @@ package com.despectra.android.classjournal_new;
 
 public final class R {
     public static final class attr {
+        /** <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int title=0x7f010000;
     }
     public static final class color {
+        public static final int gray240=0x7f040006;
+        public static final int gray250=0x7f040007;
+        public static final int gray_85=0x7f040003;
+        public static final int gray_a0=0x7f040004;
+        public static final int gray_af=0x7f040005;
+        public static final int lesson_completed_background=0x7f040008;
+        public static final int lesson_current_background=0x7f040009;
+        public static final int lesson_current_stroke=0x7f04000a;
+        public static final int lesson_future_background=0x7f04000b;
+        public static final int lesson_future_stroke=0x7f04000c;
         public static final int login_background=0x7f040000;
         public static final int menu_text=0x7f040002;
         public static final int profile=0x7f040001;
@@ -26,25 +44,39 @@ public final class R {
         public static final int activity_vertical_margin=0x7f050001;
     }
     public static final class drawable {
-        public static final int drawer_shadow=0x7f020000;
-        public static final int ic_drawer=0x7f020001;
-        public static final int ic_launcher=0x7f020002;
+        public static final int bg_1=0x7f020000;
+        public static final int drawer_shadow=0x7f020001;
+        public static final int ic_drawer=0x7f020002;
+        public static final int ic_launcher=0x7f020003;
+        public static final int lesson_current_drawable=0x7f020004;
+        public static final int lesson_future_drawable=0x7f020005;
+        public static final int module_title_background=0x7f020006;
+        public static final int test_ava=0x7f020007;
     }
     public static final class id {
-        public static final int action_logout=0x7f090009;
-        public static final int action_settings=0x7f090008;
+        public static final int action_logout=0x7f090011;
+        public static final int action_settings=0x7f090010;
         public static final int anchor_view=0x7f090000;
+        public static final int card_layout=0x7f09000e;
+        public static final int card_title=0x7f09000f;
         public static final int content_layout=0x7f090006;
         public static final int drawer_layout=0x7f090005;
+        public static final int group_icon_view=0x7f09000b;
+        public static final int group_view=0x7f09000c;
         public static final int login_btn=0x7f090003;
         public static final int login_edit=0x7f090001;
-        public static final int nav_drawer=0x7f090007;
+        public static final int nav_drawer=0x7f09000d;
         public static final int password_edit=0x7f090002;
         public static final int response_text=0x7f090004;
+        public static final int status_view=0x7f090009;
+        public static final int subject_view=0x7f090008;
+        public static final int test_sched_item=0x7f090007;
+        public static final int time_view=0x7f09000a;
     }
     public static final class layout {
         public static final int activity_auth=0x7f030000;
         public static final int activity_main=0x7f030001;
+        public static final int titled_card=0x7f030002;
     }
     public static final class menu {
         public static final int auth=0x7f080000;
@@ -82,5 +114,37 @@ public final class R {
          */
         public static final int AppTheme=0x7f070001;
         public static final int CustomActionBar=0x7f070002;
+        public static final int CustomActionBarSubtitle=0x7f070004;
+        public static final int CustomActionBarTitle=0x7f070003;
+        public static final int CustomTextView=0x7f070005;
     }
+    public static final class styleable {
+        /** Attributes that can be used with a TitledCard.
+           <p>Includes the following attributes:</p>
+           <table>
+           <colgroup align="left" />
+           <colgroup align="left" />
+           <tr><th>Attribute</th><th>Description</th></tr>
+           <tr><td><code>{@link #TitledCard_title com.despectra.android.classjournal_new:title}</code></td><td></td></tr>
+           </table>
+           @see #TitledCard_title
+         */
+        public static final int[] TitledCard = {
+            0x7f010000
+        };
+        /**
+          <p>This symbol is the offset where the {@link com.despectra.android.classjournal_new.R.attr#title}
+          attribute's value can be found in the {@link #TitledCard} array.
+
+
+          <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name android:title
+        */
+        public static final int TitledCard_title = 0;
+    };
 }

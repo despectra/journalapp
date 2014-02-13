@@ -5,8 +5,8 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="14"
-        android:targetSdkVersion="15" />
+        android:minSdkVersion="16"
+        android:targetSdkVersion="16" />
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
@@ -20,15 +20,14 @@
             android:windowSoftInputMode="stateHidden"
             android:configChanges="keyboardHidden|orientation"
             android:noHistory="true" android:theme="@android:style/Theme.Holo.Light.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <service android:label="Background_networking_service" android:name="BackgroundService"></service>
         <activity
             android:name="MainActivity" >
-            
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>        
     </application>
 
