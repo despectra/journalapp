@@ -9,6 +9,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.ByteBuffer;
 
+import com.despectra.android.classjournal_new.Background.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -43,15 +44,15 @@ public class BackgroundService extends IntentService {
 			Bundle intentData = intent.getExtras();
 			int apiMethodCode = intentData.getInt(DATA_API_METHOD);
 			switch(apiMethodCode) {
-			case ApiMethodCodes.AUTH_LOGIN:
-				//processLoginResponse(login(intentData.getString(DATA_LOGIN), intentData.getString(DATA_PASSWORD)));
-				break;
-			case ApiMethodCodes.PROFILE_GET:
-				//processProfileResponse(getProfile(intentData.getString(DATA_TOKEN)));
-				break;
-			case ApiMethodCodes.AUTH_CHECK_TOKEN:
-				//processTokenChecking(checkToken(intentData.getString(DATA_TOKEN)));
-				break;
+                case com.despectra.android.classjournal_new.Background.ServerApi.API_AUTH_LOGIN:
+                    //processLoginResponse(login(intentData.getString(DATA_LOGIN), intentData.getString(DATA_PASSWORD)));
+                    break;
+                case com.despectra.android.classjournal_new.Background.ServerApi.API_PROFILE_GET:
+                    //processProfileResponse(getProfile(intentData.getString(DATA_TOKEN)));
+                    break;
+                case com.despectra.android.classjournal_new.Background.ServerApi.API_AUTH_CHECK_TOKEN:
+                    //processTokenChecking(checkToken(intentData.getString(DATA_TOKEN)));
+                    break;
 			}
 		} catch(Exception ex) {
 				Intent responseIntent = new Intent(intent.getAction());
