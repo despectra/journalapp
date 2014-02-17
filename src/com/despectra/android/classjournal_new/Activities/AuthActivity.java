@@ -18,6 +18,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import com.despectra.android.classjournal_new.*;
+import com.despectra.android.classjournal_new.Background.BackgroundService;
+import com.despectra.android.classjournal_new.Background.ServerApi;
+import com.despectra.android.classjournal_new.Utils.PrefsManager;
 
 public class AuthActivity extends Activity implements View.OnClickListener, TextView.OnEditorActionListener {
 
@@ -41,7 +44,7 @@ public class AuthActivity extends Activity implements View.OnClickListener, Text
         filter.addAction(BackgroundService.ACTION_GET_PROFILE);
 
         registerReceiver(mLoginReceiver, filter);
-        SharedPreferences prefs = getSharedPreferences(PreferencesManager.USER_DATA_PREFS, MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences(PrefsManager.USER_DATA_PREFS, MODE_PRIVATE);
         if(prefs.contains("token") && !prefs.getString("token", "").equals("")) {
 
         }
@@ -66,7 +69,7 @@ public class AuthActivity extends Activity implements View.OnClickListener, Text
     }
 
     private void skipLogging() {
-        Intent intent = new Intent(this, com.despectra.android.classjournal_new.MainActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         return;
     }
@@ -138,7 +141,7 @@ public class AuthActivity extends Activity implements View.OnClickListener, Text
                     case 1:
                         mLoggingDialog.setMessage("Retrieving user data");
                         String token = data.getString("token");
-                        PreferencesManager.inflatePreferencesFromIntentExtras(AuthActivity.this,
+                        PrefsManager.inflatePreferencesFromIntentExtras(AuthActivity.this,
                                 new String[]{"token"},
                                 data);
                         Intent intent = new Intent(AuthActivity.this, BackgroundService.class);
@@ -155,10 +158,10 @@ public class AuthActivity extends Activity implements View.OnClickListener, Text
                     mResponseText.setText(data.getString("error_message"));
                     return;
                 }
-                PreferencesManager.inflatePreferencesFromIntentExtras(AuthActivity.this,
+                PrefsManager.inflatePreferencesFromIntentExtras(AuthActivity.this,
                         new String[]{"uid", "name", "surname", "middlename", "level", "avatar"},
                         data);
-                Intent intent = new Intent(AuthActivity.this, com.despectra.android.classjournal_new.MainActivity.class);
+                Intent intent = new Intent(AuthActivity.this, MainActivity.class);
                 startActivity(intent);
             }
         }

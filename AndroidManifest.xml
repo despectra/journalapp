@@ -14,21 +14,29 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+
         <activity
-            android:name="com.despectra.android.classjournal_new.AuthActivity"
+            android:name=".Activities.AuthActivity"
             android:label="@string/app_name"
             android:windowSoftInputMode="stateHidden"
             android:configChanges="keyboardHidden|orientation"
-            android:noHistory="true" android:theme="@android:style/Theme.Holo.Light.NoActionBar">
+            android:noHistory="true"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar">
         </activity>
-        <service android:label="Background_networking_service" android:name="BackgroundService"></service>
+        <service android:label="Background_networking_service" android:name=".Background.BackgroundService"></service>
         <activity
-            android:name="MainActivity" >
+                android:name=".Activities.MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>        
+        </activity>
+        <activity
+            android:name=".Activities.JournalActivity"
+            android:label="Journal"
+            android:parentActivityName=".Activities.MainActivity"/>
+
+
     </application>
 
 </manifest>
