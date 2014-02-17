@@ -1,4 +1,8 @@
-package com.despectra.android.classjournal_new;
+package com.despectra.android.classjournal_new.Background;
+
+/**
+ * Created by Dmirty on 17.02.14.
+ */
 
 import java.io.FileOutputStream;
 import java.io.IOException;

@@ -112,7 +112,7 @@ public class AuthActivity extends Activity implements OnClickListener, OnEditorA
 		mResponseText.setText(null);
 		Intent intent = new Intent(this, BackgroundService.class);
 		intent.setAction(BackgroundService.ACTION_LOGIN)
-		      .putExtra(BackgroundService.DATA_API_METHOD, ApiMethodCodes.AUTH_LOGIN)
+		      .putExtra(BackgroundService.DATA_API_METHOD, ServerApi.API_AUTH_LOGIN)
 		      .putExtra(BackgroundService.DATA_LOGIN, login)
 		      .putExtra(BackgroundService.DATA_PASSWORD, pass);
 		startService(intent);
@@ -144,7 +144,7 @@ public class AuthActivity extends Activity implements OnClickListener, OnEditorA
 							data);
 					Intent intent = new Intent(AuthActivity.this, BackgroundService.class);
 					intent.setAction(BackgroundService.ACTION_GET_PROFILE)
-					  	  .putExtra(BackgroundService.DATA_API_METHOD, ApiMethodCodes.PROFILE_GET)
+					  	  .putExtra(BackgroundService.DATA_API_METHOD, ServerApi.API_PROFILE_GET)
 						  .putExtra(BackgroundService.DATA_TOKEN, token);
 					startService(intent);
 					break;
