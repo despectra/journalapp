@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+
+    android:background="@color/gray_af">
+
+    <GridView
+        android:id="@+id/journal_header_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="1dp"
+        android:numColumns="6"
+        android:columnWidth="50dp"
+        android:scrollbars="none"
+        android:verticalSpacing="1dp"
+        android:horizontalSpacing="1dp"
+        android:paddingLeft="1dp"
+        android:layout_weight="10"
+        android:gravity="center"/>
+
+    <GridView
+        android:id="@+id/journal_marks_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:numColumns="6"
+        android:columnWidth="50dp"
+        android:scrollbars="none"
+        android:verticalSpacing="1dp"
+        android:horizontalSpacing="1dp"
+        android:paddingLeft="1dp"
+        android:gravity="center"
+        android:layout_weight="1" />
+</LinearLayout>
