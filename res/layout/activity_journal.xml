@@ -9,13 +9,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="@color/gray240"
+        android:background="@android:color/transparent"
         android:layout_weight="15">
 
-        <Space
+        <View
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="10" />
+            android:layout_weight="10"
+            android:background="@drawable/border_bottom"/>
 
         <ListView
             android:id="@+id/group_list_view"
@@ -24,21 +25,15 @@
             android:layout_weight="1"
             android:scrollbars="none"
             android:overScrollMode="never"
+            android:background="@android:color/transparent"
+            android:drawSelectorOnTop="false"
             />
 
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/gray240"
-        android:orientation="vertical"
-        android:layout_weight="6">
-
         <android.support.v4.view.ViewPager
             android:id="@+id/journal_pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_weight="6"
             />
-
-    </LinearLayout>
 </LinearLayout>

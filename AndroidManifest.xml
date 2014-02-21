@@ -26,15 +26,17 @@
         <service android:label="Background_networking_service" android:name=".Background.BackgroundService"></service>
         <activity
                 android:name=".Activities.MainActivity" >
+
+        </activity>
+        <activity
+            android:name=".Activities.JournalActivity"
+            android:label="Journal"
+            android:parentActivityName=".Activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".Activities.JournalActivity"
-            android:label="Journal"
-            android:parentActivityName=".Activities.MainActivity"/>
 
 
     </application>
