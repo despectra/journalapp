@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings">Настройки приложения</string>
+    <string name="settings_category_network">Сеть</string>
+    <string name="settings_host">Сервер</string>
+    <string name="settings_host_summary">Адрес сервера, содержащего данные</string>
+</resources>

@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ListView;
 import com.despectra.android.classjournal_new.Activities.JournalActivity;
+import com.despectra.android.classjournal_new.Adapters.ToggleableArrayAdapter;
 import com.despectra.android.classjournal_new.R;
 
 import java.util.Random;
@@ -72,8 +73,8 @@ public class JournalMarksFragment extends Fragment implements AbsListView.OnScro
         for (int i = 0; i < marksData.length; i++) {
             marksData[i] = String.valueOf(i);
         }
-        mHeaderGrid.setAdapter(new ArrayAdapter<String>(getActivity(), R.layout.journal_mark_item, headerData));
-        mMarksGrid.setAdapter(new ArrayAdapter<String>(getActivity(), R.layout.journal_mark_item, marksData));
+        mHeaderGrid.setAdapter(new ToggleableArrayAdapter<String>(getActivity(), R.layout.journal_mark_item, headerData));
+        mMarksGrid.setAdapter(new ToggleableArrayAdapter<String>(getActivity(), R.layout.journal_mark_item, marksData));
         mMarksGrid.setOnScrollListener(this);
         if (mFragmentCallback != null) {
             mFragmentCallback.onFragmentCreated();

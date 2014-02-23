@@ -8,9 +8,19 @@
     android:layout_height="match_parent">
 
     <com.despectra.android.classjournal_new.Views.TitledCard
-        android:layout_width="500dp"
-        android:layout_height="wrap_content"
-        journalviews:title="Расписание">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        android:layout_marginBottom="40dp"
+        journalviews:title="События">
+
+    </com.despectra.android.classjournal_new.Views.TitledCard>
+
+    <com.despectra.android.classjournal_new.Views.TitledCard
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        journalviews:title="Расписание"
+        android:layout_weight="4">
 
         <ListView
             android:id="@+id/schedule_list"
