@@ -17,8 +17,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.despectra.android.classjournal_new.Adapters.DrawerAdapter;
+import com.despectra.android.classjournal_new.Background.BackgroundService;
 import com.despectra.android.classjournal_new.Fragments.MainPageFragment;
 import com.despectra.android.classjournal_new.R;
+import com.despectra.android.classjournal_new.Utils.PrefsManager;
 
 public class MainActivity extends Activity implements AdapterView.OnItemClickListener {
 
@@ -82,7 +84,6 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main_activity_menu, menu);
         return true;
     }
@@ -91,6 +92,21 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     public boolean onOptionsItemSelected(MenuItem item) {
         if(mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
+        }
+        switch (item.getItemId()) {
+            case R.id.action_logout:
+                PrefsManager.clearPreferences(this, new String[]{"token"});
+
+                Intent serviceIntent = new Intent(this, BackgroundService.class);
+                serviceIntent.setAction(BackgroundService.ACTION_LOGOUT);
+                serviceIntent.putExtra("token", mToken);
+                startService(serviceIntent);
+
+                Intent activityIntent = new Intent(this, AuthActivity.class);
+                activityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(activityIntent);
+                finish();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

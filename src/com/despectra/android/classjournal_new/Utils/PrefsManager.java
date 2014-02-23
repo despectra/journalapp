@@ -7,9 +7,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 
 public class PrefsManager {
     public static final String USER_DATA_PREFS = "com.despectra.android.classjournal_new.USER_DATA_PREFS";
+
+    public static final String KEY_HOST = "settings_host";
 
     public static void clearPreferences(Context context, String[] keys) {
         SharedPreferences.Editor prefsEditor = context.getSharedPreferences(USER_DATA_PREFS, context.MODE_PRIVATE).edit();
@@ -27,5 +30,8 @@ public class PrefsManager {
         prefsEditor.commit();
     }
 
+    public static SharedPreferences getDefaultPreferences(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context);
+    }
 
 }

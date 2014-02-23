@@ -11,6 +11,9 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import com.despectra.android.classjournal_new.Utils.PrefsManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,101 +29,132 @@ public class ServerApi {
     public static final String[] LOGIN_SUCCESS_KEYS = new String[]{"success", "token"};
     public static final String[] GETMINPROFILE_SUCCESS_KEYS = new String[]{"uid", "name", "middlename", "surname", "level"};
     public static final String[] CHECKTOKEN_SUCCESS_KEYS = new String[]{"success"};
-
     public static final String AVATAR_FILENAME = "user_avatar";
 
-    public static class Auth {
-        public static JSONObject login(String login, String password) throws Exception {
-            String response = doQuery(
-                    "http://j292427.myjino.ru/api/index.php?auth.login",
-                    "POST",
-                    String.format("login=%s&passwd=%s", login, password));
-            return processApiResponse(
-                    response,
-                    LOGIN_SUCCESS_KEYS,
-                    ERROR_KEYS,
-                    new JSONPredicate() {
-                        @Override
-                        public boolean check(JSONObject json) throws Exception {
-                            return json.getInt("success") != 0;
-                        }
-                    },
-                    null);
-        }
+    private static final JSONPredicate SIMPLE_PREDICATE = new JSONPredicate() {
+            @Override
+            public boolean check(JSONObject json) throws Exception {
+                return json.getInt("success") == 1;
+            }
+        };
 
-        public static JSONObject checkToken(Context ctx, String token) throws Exception {
-            JSONObject json = new JSONObject();
-            json.put("token", token);
-            String response = doQuery(
-                    String.format("http://j292427.myjino.ru/api/index.php?auth.checktoken=%s", json.toString()),
-                    "GET",
-                    "");
-            return processApiResponse(
-                    response,
-                    CHECKTOKEN_SUCCESS_KEYS,
-                    ERROR_KEYS,
-                    new JSONPredicate() {
-                        @Override
-                        public boolean check(JSONObject json) throws Exception {
-                            return json.getInt("success") == 1;
-                        }
-                    },
-                    null);
-        }
+    private static ServerApi mServerInstance;
+    private Context mContext;
+    private String mHost;
+
+    private ServerApi(Context context, String host) {
+        setHost(host);
+        setContext(context);
     }
 
-    ;
+    public  static ServerApi instantiate(Context context, String host) {
+        if (mServerInstance == null) {
+            mServerInstance = new ServerApi(context, host);
+        }
+        return mServerInstance;
+    }
 
-    public static class Profile {
-        public static JSONObject getMinProfile(final Context ctx, String token) throws Exception {
-            JSONObject json = new JSONObject();
-            json.put("token", token);
-            String response = doQuery(
-                    String.format("http://j292427.myjino.ru/api/index.php?profile.getminprofile=%s", json.toString()),
-                    "GET",
-                    "");
-            return processApiResponse(
-                    response,
-                    GETMINPROFILE_SUCCESS_KEYS,
-                    ERROR_KEYS,
-                    new JSONPredicate() {
-                        @Override
-                        public boolean check(JSONObject json) throws Exception {
-                            return !(json.has("success") && json.getInt("success") == 0);
-                        }
-                    },
-                    new ApiCallback() {
-                        @Override
-                        public void apiSuccess(JSONObject json) throws JSONException, IOException {
-                            String avatarUrl = "http://" + json.getString("avatar");
-                            InputStream in = (InputStream) new URL(avatarUrl).getContent();
-                            FileOutputStream fos = ctx.openFileOutput(AVATAR_FILENAME, Context.MODE_PRIVATE);
-                            int b;
-                            while ((b = in.read()) != -1) {
-                                fos.write(b);
-                            }
-                            in.close();
-                            fos.close();
-                        }
+    public void setHost(String host) {
+        mHost = host;
+    }
+
+    public void setContext(Context context) {
+        mContext = context;
+    }
+
+    public JSONObject login(String login, String password) throws Exception {
+        String response = doQuery(
+                String.format("%s/api/index.php?auth.login", mHost),
+                "POST",
+                String.format("login=%s&passwd=%s", login, password));
+        return processApiResponse(
+                response,
+                LOGIN_SUCCESS_KEYS,
+                ERROR_KEYS,
+                SIMPLE_PREDICATE,
+                null);
+    }
+
+    public JSONObject logout(String token) throws Exception {
+        JSONObject json = new JSONObject();
+        json.put("token", token);
+        String response = doQuery(
+                String.format("%s/api/index.php?auth.logout=%s", mHost, json.toString()),
+                "GET",
+                ""
+        );
+        return processApiResponse(
+                response,
+                CHECKTOKEN_SUCCESS_KEYS,
+                ERROR_KEYS,
+                SIMPLE_PREDICATE,
+                null);
+    }
+
+    public JSONObject checkToken(String token) throws Exception {
+        JSONObject json = new JSONObject();
+        json.put("token", token);
+        String response = doQuery(
+                String.format("%s/api/index.php?auth.checktoken=%s", mHost, json.toString()),
+                "GET",
+                "");
+        return processApiResponse(
+                response,
+                CHECKTOKEN_SUCCESS_KEYS,
+                ERROR_KEYS,
+                SIMPLE_PREDICATE,
+                null);
+    }
+
+    public JSONObject getMinProfile(String token) throws Exception {
+        JSONObject json = new JSONObject();
+        json.put("token", token);
+        String response = doQuery(
+                String.format("%s/api/index.php?profile.getminprofile=%s", mHost, json.toString()),
+                "GET",
+                "");
+        return processApiResponse(
+                response,
+                GETMINPROFILE_SUCCESS_KEYS,
+                ERROR_KEYS,
+                new JSONPredicate() {
+                    @Override
+                    public boolean check(JSONObject json) throws Exception {
+                        return !(json.has("success") && json.getInt("success") == 0);
                     }
-            );
-        }
+                },
+                new ApiCallback() {
+                    @Override
+                    public void apiSuccess(JSONObject json) throws JSONException, IOException {
+                        String avatarUrl = "http://" + json.getString("avatar");
+                        InputStream in = (InputStream) new URL(avatarUrl).getContent();
+                        FileOutputStream fos = mContext.openFileOutput(AVATAR_FILENAME, Context.MODE_PRIVATE);
+                        int b;
+                        while ((b = in.read()) != -1) {
+                            fos.write(b);
+                        }
+                        in.close();
+                        fos.close();
+                    }
+                }
+        );
     }
 
-    ;
-
-    private static String doQuery(String host, String method, String queryBody) throws IOException {
+    private String doQuery(String httpUrl, String httpMethod, String queryBody) throws Exception {
+        if (mHost.isEmpty()) {
+            throw new Exception("Server hostname is incorrect");
+        }
         InputStream reader = null;
         OutputStream writer = null;
         String exeptionMessage = null;
         try {
             /*MessageDigest md5 = MessageDigest.getInstance("MD5");
-			md5.update(password.getBytes());
+            md5.update(password.getBytes());
 			password = new String(md5.digest());*/
 
-            URL url = new URL(host);
+            URL url = new URL(httpUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod(method);
+            connection.setRequestMethod(httpMethod);
             connection.setConnectTimeout(30000);
             connection.setReadTimeout(15000);
             connection.setDoOutput(true);
@@ -144,7 +178,7 @@ public class ServerApi {
         return exeptionMessage;
     }
 
-    private static JSONObject processApiResponse(
+    private JSONObject processApiResponse(
             String response,
             String[] keysIfSuccess,
             String[] keysIfError,

@@ -8,10 +8,19 @@
     android:layout_height="match_parent">
 
     <com.despectra.android.classjournal_new.Views.TitledCard
-        android:layout_width="400dp"
-        android:layout_height="wrap_content"
-        journalviews:title="Расписание">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="8"
+        journalviews:title="События"
+        android:layout_marginRight="40dp">
 
+    </com.despectra.android.classjournal_new.Views.TitledCard>
+
+    <com.despectra.android.classjournal_new.Views.TitledCard
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="10"
+        journalviews:title="Расписание">
         <ListView
             android:id="@+id/schedule_list"
             android:layout_width="match_parent"
@@ -21,6 +30,5 @@
             android:scrollbars="none"
             android:dividerHeight="10dp"
             android:divider="@android:color/transparent"/>
-
     </com.despectra.android.classjournal_new.Views.TitledCard>
 </LinearLayout>

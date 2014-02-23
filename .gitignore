@@ -214,9 +214,11 @@ pip-log.txt
 #Mr Developer
 .mr.developer.cfg
 
+###########  SPECIFIC   ##################
 
 ####################
 # IntelliJ IDEA
 ####################
 .idea
 out
+AuthActivity.iml

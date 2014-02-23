@@ -4,12 +4,12 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.despectra.android.classjournal_new.Adapters.JournalPagerAdapter;
+import com.despectra.android.classjournal_new.Adapters.ToggleableArrayAdapter;
 import com.despectra.android.classjournal_new.Fragments.JournalMarksFragment;
 import com.despectra.android.classjournal_new.R;
-import com.despectra.android.classjournal_new.Utils.ViewsTouchSynchronizer;
+import com.despectra.android.classjournal_new.Utils.AbsListViewsTouchSynchronizer;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class JournalActivity extends FragmentActivity implements JournalMarksFra
 
     private ViewPager mPager;
     private JournalPagerAdapter mPagerAdapter;
-    private ViewsTouchSynchronizer mListAndGridSync;
+    private AbsListViewsTouchSynchronizer mListAndGridSync;
     private JournalMarksFragment mCurrentGridFragment;
     private int mFragmentGridPosition;
     private int mFragmentGridOffset;
@@ -40,7 +40,7 @@ public class JournalActivity extends FragmentActivity implements JournalMarksFra
         setContentView(R.layout.activity_journal);
 
         mGroupList = (ListView)findViewById(R.id.group_list_view);
-        mGroupList.setAdapter(new ArrayAdapter<String>(
+        mGroupList.setAdapter(new ToggleableArrayAdapter<String>(
                 this,
                 R.layout.journal_student_item,
                 new String[]{"Дубинкинa Анастасия Кузьмевна",
@@ -120,7 +120,7 @@ public class JournalActivity extends FragmentActivity implements JournalMarksFra
         if (mListAndGridSync != null) {
             mListAndGridSync.setNewViews(mGroupList, mCurrentGridFragment.getMarksGridView());
         } else {
-            mListAndGridSync = new ViewsTouchSynchronizer(this, mGroupList, mCurrentGridFragment.getMarksGridView());
+            mListAndGridSync = new AbsListViewsTouchSynchronizer(this, mGroupList, mCurrentGridFragment.getMarksGridView());
         }
     }
 }

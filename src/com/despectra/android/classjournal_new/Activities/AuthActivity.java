@@ -16,18 +16,19 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import com.despectra.android.classjournal_new.*;
 import com.despectra.android.classjournal_new.Background.BackgroundService;
 import com.despectra.android.classjournal_new.Background.ServerApi;
 import com.despectra.android.classjournal_new.Utils.PrefsManager;
 
-public class AuthActivity extends Activity implements View.OnClickListener, TextView.OnEditorActionListener {
+public class AuthActivity extends Activity implements TextView.OnEditorActionListener {
 
     public static final String BACKGROUND_FRAGMENT_TAG = "login_fragment";
 
-    private String mToken;
     private Button mLoginBtn;
+    private ImageButton mSettingsButton;
     private EditText mLoginEdit;
     private EditText mPassEdit;
     private TextView mResponseText;
@@ -46,7 +47,9 @@ public class AuthActivity extends Activity implements View.OnClickListener, Text
         registerReceiver(mLoginReceiver, filter);
         SharedPreferences prefs = getSharedPreferences(PrefsManager.USER_DATA_PREFS, MODE_PRIVATE);
         if(prefs.contains("token") && !prefs.getString("token", "").equals("")) {
-
+            launchMainActivity();
+        } else {
+            initUi();
         }
     }
 
@@ -62,22 +65,36 @@ public class AuthActivity extends Activity implements View.OnClickListener, Text
 
         mLoggingDialog = new ProgressDialog(this);
         mLoggingDialog.setTitle("Log in");
-        mLoggingDialog.setMessage("Logging inprocess");
+        mLoggingDialog.setMessage("Logging in process");
         mLoggingDialog.setCancelable(false);
 
-        mLoginBtn.setOnClickListener(this);
+        mLoginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View clickedView) {
+                performLogin();
+            }
+        });
+        mSettingsButton = (ImageButton) findViewById(R.id.settings_btn);
+        mSettingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AuthActivity.this, MainPreferencesActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
-    private void skipLogging() {
+    private void launchMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
+        finish();
         return;
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.e("TAG", "onDestroy");
         if(mLoginReceiver != null) {
             unregisterReceiver(mLoginReceiver);
         }
@@ -90,10 +107,7 @@ public class AuthActivity extends Activity implements View.OnClickListener, Text
         return true;
     }
 
-    @Override
-    public void onClick(View clickedView) {
-        performLogin();
-    }
+
 
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -152,7 +166,6 @@ public class AuthActivity extends Activity implements View.OnClickListener, Text
                         break;
                 }
             } else if(responseIntent.getAction() == BackgroundService.ACTION_GET_PROFILE) {
-                //TODO start main activity;
                 mLoggingDialog.dismiss();
                 if(data.containsKey("success") && data.getString("success").equals("0")) {
                     mResponseText.setText(data.getString("error_message"));
@@ -161,8 +174,7 @@ public class AuthActivity extends Activity implements View.OnClickListener, Text
                 PrefsManager.inflatePreferencesFromIntentExtras(AuthActivity.this,
                         new String[]{"uid", "name", "surname", "middlename", "level", "avatar"},
                         data);
-                Intent intent = new Intent(AuthActivity.this, MainActivity.class);
-                startActivity(intent);
+                launchMainActivity();
             }
         }
     }
