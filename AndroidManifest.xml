@@ -21,10 +21,7 @@
             android:windowSoftInputMode="stateHidden"
             android:configChanges="keyboardHidden|orientation"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
 
         <activity
@@ -35,6 +32,10 @@
             android:name=".Activities.JournalActivity"
             android:label="Journal"
             android:parentActivityName=".Activities.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <activity

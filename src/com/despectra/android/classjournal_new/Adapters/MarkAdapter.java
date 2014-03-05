@@ -16,7 +16,7 @@ import com.despectra.android.classjournal_new.R;
 /**
  * Created by Dmirty on 18.02.14.
  */
-public class MarkAdapter extends ToggleableArrayAdapter<String> {
+public class MarkAdapter extends ArrayAdapter<String> {
 
     public MarkAdapter(Context context, int textViewResourceId, String[] objects) {
         super(context, textViewResourceId, objects);

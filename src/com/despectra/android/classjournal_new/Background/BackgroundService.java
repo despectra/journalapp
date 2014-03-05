@@ -92,7 +92,7 @@ public class BackgroundService extends IntentService {
             sendBroadcast(responseIntent);
         } catch(Exception ex) {
             Intent responseIntent = new Intent(intent.getAction());
-            responseIntent.putExtra("success", -1)
+            responseIntent.putExtra("success", "-1")
                     .putExtra("exception", ex.getMessage());
             sendBroadcast(responseIntent);
         }
