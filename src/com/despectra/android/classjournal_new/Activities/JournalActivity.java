@@ -4,19 +4,22 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.widget.AbsListView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.despectra.android.classjournal_new.Adapters.JournalPagerAdapter;
-import com.despectra.android.classjournal_new.Adapters.ToggleableArrayAdapter;
 import com.despectra.android.classjournal_new.Fragments.JournalMarksFragment;
 import com.despectra.android.classjournal_new.R;
-import com.despectra.android.classjournal_new.Utils.AbsListViewsTouchSynchronizer;
+import com.despectra.android.classjournal_new.Utils.AbsListViewsDrawSynchronizer;
+import com.despectra.android.classjournal_new.Utils.Utils;
 
 import java.util.List;
 
 /**
  * Created by Dmirty on 17.02.14.
  */
-public class JournalActivity extends FragmentActivity implements JournalMarksFragment.JournalFragmentCallback {
+public class JournalActivity extends FragmentActivity implements
+        JournalMarksFragment.JournalFragmentCallback, AbsListViewsDrawSynchronizer.Callback{
 
     private static final String TAG = "JOURNAL_ACTIVITY";
 
@@ -24,7 +27,7 @@ public class JournalActivity extends FragmentActivity implements JournalMarksFra
 
     private ViewPager mPager;
     private JournalPagerAdapter mPagerAdapter;
-    private AbsListViewsTouchSynchronizer mListAndGridSync;
+    private AbsListViewsDrawSynchronizer mListsSync;
     private JournalMarksFragment mCurrentGridFragment;
     private int mFragmentGridPosition;
     private int mFragmentGridOffset;
@@ -40,7 +43,7 @@ public class JournalActivity extends FragmentActivity implements JournalMarksFra
         setContentView(R.layout.activity_journal);
 
         mGroupList = (ListView)findViewById(R.id.group_list_view);
-        mGroupList.setAdapter(new ToggleableArrayAdapter<String>(
+        mGroupList.setAdapter(new ArrayAdapter<String>(
                 this,
                 R.layout.journal_student_item,
                 new String[]{"Дубинкинa Анастасия Кузьмевна",
@@ -63,6 +66,7 @@ public class JournalActivity extends FragmentActivity implements JournalMarksFra
                         "Клецка Наталья Семеновна",
                         "Телицын Никон Всеволодович",
                         "Ягутян Вадим Тимурович"}));
+
 
         mPager = (ViewPager)findViewById(R.id.journal_pager);
         mPagerAdapter = new JournalPagerAdapter(getSupportFragmentManager());
@@ -93,14 +97,6 @@ public class JournalActivity extends FragmentActivity implements JournalMarksFra
     }
 
     @Override
-    public void onMarksGridScrolled(int scrolledPosition, int offset) {
-        if (!mIsPagerDragging) {
-            mFragmentGridPosition = scrolledPosition;
-            mFragmentGridOffset = offset;
-        }
-    }
-
-    @Override
     public void onFragmentCreated() {
         updateCurrentFragment();
     }
@@ -113,14 +109,23 @@ public class JournalActivity extends FragmentActivity implements JournalMarksFra
                 break;
             }
         }
-        updateListsTouchSynchronizer();
+        updateListsDrawSynchronizer();
     }
 
-    private void updateListsTouchSynchronizer() {
-        if (mListAndGridSync != null) {
-            mListAndGridSync.setNewViews(mGroupList, mCurrentGridFragment.getMarksGridView());
+    private void updateListsDrawSynchronizer() {
+        if (mListsSync != null) {
+            mListsSync.setNewViews(mGroupList, mCurrentGridFragment.getMarksGridView());
         } else {
-            mListAndGridSync = new AbsListViewsTouchSynchronizer(this, mGroupList, mCurrentGridFragment.getMarksGridView());
+            mListsSync = new AbsListViewsDrawSynchronizer(this, mGroupList, mCurrentGridFragment.getMarksGridView());
+            mListsSync.setCallback(this);
+        }
+    }
+
+    @Override
+    public void onScrollingStopped(AbsListView view) {
+        if (!mIsPagerDragging) {
+            mFragmentGridPosition = view.getFirstVisiblePosition();
+            mFragmentGridOffset = Utils.getAbsListViewOffset(view);
         }
     }
 }

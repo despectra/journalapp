@@ -5,5 +5,8 @@
     android:textAppearance="?android:attr/textAppearanceListItem"
     android:gravity="center"
     android:minHeight="60dp"
-    android:background="@drawable/mark_item_bg"
+    android:background="@drawable/mark_item_background_selector"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:clickable="true"
     />
