@@ -25,7 +25,6 @@ public class AbsListViewsDrawSynchronizer {
     private ViewTreeObserver.OnDrawListener mFirstDrawListener = new ViewTreeObserver.OnDrawListener() {
         @Override
         public void onDraw() {
-            //Log.e(TAG, "onDraw listener");
             mSecondView.postOnAnimation(new Runnable() {
                 @Override
                 public void run() {
@@ -38,7 +37,6 @@ public class AbsListViewsDrawSynchronizer {
     private ViewTreeObserver.OnDrawListener mSecondDrawListener = new ViewTreeObserver.OnDrawListener() {
         @Override
         public void onDraw() {
-            //setListScrolling(mFirstView, mSecondView.getFirstVisiblePosition(), calculateListOffset(mSecondView));
             mFirstView.postOnAnimation(new Runnable() {
                 @Override
                 public void run() {
@@ -75,8 +73,7 @@ public class AbsListViewsDrawSynchronizer {
         mSecondView = v2;
 
         mViewToListenerMap = new HashMap<ListView, ViewTreeObserver.OnDrawListener>(2);
-        mViewToListenerMap.put(mFirstView, mFirstDrawListener);
-        mViewToListenerMap.put(mSecondView, mSecondDrawListener);
+        updateMap();
         attachListeners();
     }
 
@@ -88,6 +85,7 @@ public class AbsListViewsDrawSynchronizer {
         removeListeners();
         mFirstView = v1;
         mSecondView = v2;
+        updateMap();
         attachListeners();
     }
 
@@ -99,6 +97,12 @@ public class AbsListViewsDrawSynchronizer {
     private void removeListeners() {
         mFirstView.setOnScrollListener(null);
         mSecondView.setOnScrollListener(null);
+    }
+
+    private void updateMap() {
+        mViewToListenerMap.clear();
+        mViewToListenerMap.put(mFirstView, mFirstDrawListener);
+        mViewToListenerMap.put(mSecondView, mSecondDrawListener);
     }
 
     private void setListScrolling(final ListView view, final int position, final int offset) {
