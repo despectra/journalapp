@@ -4,46 +4,82 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.widget.AbsListView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.*;
 import com.despectra.android.classjournal_new.Adapters.JournalPagerAdapter;
 import com.despectra.android.classjournal_new.Fragments.JournalMarksFragment;
 import com.despectra.android.classjournal_new.R;
 import com.despectra.android.classjournal_new.Utils.AbsListViewsDrawSynchronizer;
 import com.despectra.android.classjournal_new.Utils.Utils;
+import com.despectra.android.classjournal_new.Views.BottomTabWidget;
+import com.despectra.android.classjournal_new.Views.PercentLinearLayout;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
  * Created by Dmirty on 17.02.14.
  */
 public class JournalActivity extends FragmentActivity implements
-        JournalMarksFragment.JournalFragmentCallback, AbsListViewsDrawSynchronizer.Callback{
+        JournalMarksFragment.JournalFragmentCallback, AbsListViewsDrawSynchronizer.Callback, BottomTabWidget.OnTabSelectedListener, AdapterView.OnItemClickListener{
 
     private static final String TAG = "JOURNAL_ACTIVITY";
 
-    private ListView mGroupList;
+    public static final int GROUP = 0;
+    public static final int MARKS = 1;
 
+    private PercentLinearLayout mContentLayout;
+    private ListView mGroupsList;
+    private ListView mStudentsList;
     private ViewPager mPager;
+    private BottomTabWidget mTabWidget;
     private JournalPagerAdapter mPagerAdapter;
     private AbsListViewsDrawSynchronizer mListsSync;
     private JournalMarksFragment mCurrentGridFragment;
     private int mFragmentGridPosition;
     private int mFragmentGridOffset;
     private boolean mIsPagerDragging;
-
-    public ListView getGroupList() {
-        return mGroupList;
-    }
+    private int mUiState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_journal);
 
-        mGroupList = (ListView)findViewById(R.id.group_list_view);
-        mGroupList.setAdapter(new ArrayAdapter<String>(
+        mContentLayout = (PercentLinearLayout)findViewById(R.id.journal_content_layout);
+        mGroupsList = (ListView)findViewById(R.id.groups_list_view);
+        mGroupsList.setAdapter(new ArrayAdapter<String>(
+                this,
+                android.R.layout.simple_list_item_1,
+                new String[]{
+                        "8",
+                        "8 A",
+                        "9 Б",
+                        "10 В",
+                        "8",
+                        "8 A",
+                        "9 Б",
+                        "10 В",
+                        "8",
+                        "8 A",
+                        "9 Б",
+                        "10 В",
+                        "8",
+                        "8 A",
+                        "9 Б",
+                        "10 В",
+                        "8",
+                        "8 A",
+                        "9 Б"
+                }
+        ));
+        mGroupsList.setOnItemClickListener(this);
+
+        mStudentsList = (ListView)findViewById(R.id.students_list_view);
+        mStudentsList.setAdapter(new ArrayAdapter<String>(
                 this,
                 R.layout.journal_student_item,
                 new String[]{"Дубинкинa Анастасия Кузьмевна",
@@ -66,7 +102,6 @@ public class JournalActivity extends FragmentActivity implements
                         "Клецка Наталья Семеновна",
                         "Телицын Никон Всеволодович",
                         "Ягутян Вадим Тимурович"}));
-
 
         mPager = (ViewPager)findViewById(R.id.journal_pager);
         mPagerAdapter = new JournalPagerAdapter(getSupportFragmentManager());
@@ -93,7 +128,20 @@ public class JournalActivity extends FragmentActivity implements
                 }
             }
         });
+
         mIsPagerDragging = false;
+        mTabWidget = (BottomTabWidget) findViewById(R.id.journal_tabs);
+        mTabWidget.setTabsList(Arrays.asList(new String[]{"Класс", "Оценки"}));
+        mTabWidget.setCurrentTab(1);
+        mTabWidget.setOnTabSelectedListener(this);
+
+        mUiState = MARKS;
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        mContentLayout.setTranslationXByPercent(-30);
     }
 
     @Override
@@ -114,9 +162,9 @@ public class JournalActivity extends FragmentActivity implements
 
     private void updateListsDrawSynchronizer() {
         if (mListsSync != null) {
-            mListsSync.setNewViews(mGroupList, mCurrentGridFragment.getMarksGridView());
+            mListsSync.setNewViews(mStudentsList, mCurrentGridFragment.getMarksGridView());
         } else {
-            mListsSync = new AbsListViewsDrawSynchronizer(this, mGroupList, mCurrentGridFragment.getMarksGridView());
+            mListsSync = new AbsListViewsDrawSynchronizer(this, mStudentsList, mCurrentGridFragment.getMarksGridView());
             mListsSync.setCallback(this);
         }
     }
@@ -126,6 +174,39 @@ public class JournalActivity extends FragmentActivity implements
         if (!mIsPagerDragging) {
             mFragmentGridPosition = view.getFirstVisiblePosition();
             mFragmentGridOffset = Utils.getAbsListViewOffset(view);
+        }
+    }
+
+    @Override
+    public void onTabSelected(final int index) {
+        if (index != mUiState) {
+            mContentLayout.smoothScrollByPercent(
+                    (index == GROUP) ? 30 : -30,
+                    250,
+                    null,
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            mUiState = index;
+                        }
+                    });
+        }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        if (adapterView == mGroupsList) {
+            mContentLayout.smoothScrollByPercent(
+                    -30,
+                    250,
+                    null,
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            mUiState = MARKS;
+                        }
+                    });
+            mTabWidget.setCurrentTab(1);
         }
     }
 }

@@ -9,15 +9,14 @@
     <GridView
         android:id="@+id/journal_header_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="50dp"
         android:numColumns="6"
         android:columnWidth="50dp"
         android:scrollbars="none"
         android:verticalSpacing="0dp"
         android:horizontalSpacing="0dp"
-        android:layout_weight="10"
         android:gravity="center"
-        android:background="@drawable/border_right_bottom"/>
+        android:background="@drawable/border_right_top"/>
 
     <ListView
         android:id="@+id/journal_marks_view"
@@ -26,8 +25,7 @@
         android:scrollbars="none"
         android:gravity="center"
         android:layout_weight="1"
-        android:layout_marginBottom="-1dp"
-        android:background="@drawable/border_right"
+        android:background="@drawable/border_right_top"
         />
 
 <!--
