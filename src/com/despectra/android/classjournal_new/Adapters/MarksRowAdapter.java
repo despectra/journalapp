@@ -59,7 +59,7 @@ public class MarksRowAdapter extends BaseAdapter {
             row.setOrientation(LinearLayout.HORIZONTAL);
             row.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT));
 
-            int cellWidth = parent.getWidth() / mColumnsCount;
+            int cellWidth = parent.getWidth() / mColumnsCount - 1;
             for (int column = 0; column < mColumnsCount; column++) {
                 View cellView = LayoutInflater.from(mContext).inflate(mCellLayout, null, false);
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
