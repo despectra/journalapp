@@ -222,3 +222,4 @@ pip-log.txt
 .idea
 out
 AuthActivity.iml
+gen/com/despectra/android/classjournal_new/BuildConfig.java
