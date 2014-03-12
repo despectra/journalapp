@@ -8,7 +8,7 @@ import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ListView;
-import com.despectra.android.classjournal_new.Activities.JournalActivity;
+import com.despectra.android.classjournal_new.Activities.MainActivity;
 import com.despectra.android.classjournal_new.Adapters.MarksRowAdapter;
 import com.despectra.android.classjournal_new.R;
 import com.despectra.android.classjournal_new.Utils.Utils;
@@ -44,7 +44,7 @@ public class JournalMarksFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mFragmentCallback = (JournalFragmentCallback) activity;
+        mFragmentCallback = ((MainActivity) activity).getJournalCallback();
     }
 
     @Override

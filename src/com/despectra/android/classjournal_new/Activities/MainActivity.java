@@ -4,12 +4,11 @@ package com.despectra.android.classjournal_new.Activities;
  * Created by Dmirty on 17.02.14.
  */
 
-import android.app.Activity;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.*;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,11 +16,13 @@ import android.view.View;
 import android.widget.*;
 import com.despectra.android.classjournal_new.Adapters.DrawerAdapter;
 import com.despectra.android.classjournal_new.Background.BackgroundService;
+import com.despectra.android.classjournal_new.Fragments.JournalFragment;
+import com.despectra.android.classjournal_new.Fragments.JournalMarksFragment;
 import com.despectra.android.classjournal_new.Fragments.MainPageFragment;
 import com.despectra.android.classjournal_new.R;
 import com.despectra.android.classjournal_new.Utils.PrefsManager;
 
-public class MainActivity extends Activity implements AdapterView.OnItemClickListener {
+public class MainActivity extends FragmentActivity implements AdapterView.OnItemClickListener {
 
     public static final String[] USER_DATA_PREFS_KEYS = new String[]{"token", "uid", "name", "surname", "middlename", "level", "avatar"};
 
@@ -32,6 +33,19 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     public static final int ACTION_SETTINGS = 5;
     public static final int ACTION_ABOUT = 6;
 
+    public static final String FRAGMENT_EVENTS = "EventsFragment";
+    public static final String FRAGMENT_JOURNAL = "JournalFragment";
+
+    public static final String KEY_CUR_FRAGMENT = "curFragment";
+    public static final String KEY_SELECTED_DRAWER_ITEM = "selectedDrawer";
+    private static final String TAG = "MAIN_ACTIVITY";
+
+    /*private MainPageFragment mEventsFragment;
+    private JournalFragment mJournalFragment;*/
+
+    private Fragment mCurrentFragment;
+
+    private String mCurrentFragmentTag;
     private String mToken;
     private int mUserId;
     private String mName;
@@ -39,32 +53,58 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     private String mMiddlename;
     private String mLevel;
     private String mAvatar;
-
     private DrawerLayout mDrawerLayout;
-    private ActionBarDrawerToggle mDrawerToggle;
 
+    private ActionBarDrawerToggle mDrawerToggle;
     private ListView mDrawer;
     private RelativeLayout mDrawerUserItemLayout;
     private ImageView mUserAvatarView;
     private TextView mUserSurnameView;
-    private TextView mUserNameView;
 
-    private MainPageFragment mContentFragment;
+    private TextView mUserNameView;
+    private int mSelectedDrawerItem;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         readNewPreferences();
         initDrawer();
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
 
-        mContentFragment = new MainPageFragment();
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.replace(R.id.fragment_layout, mContentFragment);
+        if (savedInstanceState != null) {
+            restoreDrawerState(savedInstanceState.getInt(KEY_SELECTED_DRAWER_ITEM));
+            String savedFragmentTag = savedInstanceState.getString(KEY_CUR_FRAGMENT);
+            mCurrentFragment = restoreFragment(savedFragmentTag);
+            mCurrentFragmentTag = savedFragmentTag;
+        } else {
+            mCurrentFragment = new MainPageFragment();
+            mCurrentFragmentTag = FRAGMENT_EVENTS;
+        }
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.fragment_layout, mCurrentFragment, mCurrentFragmentTag);
         ft.commit();
+    }
+
+    private void restoreDrawerState(int savedSelectedItem) {
+        mDrawer.setSelection(savedSelectedItem);
+    }
+
+    private Fragment restoreFragment(String savedFragmentTag) {
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment f = fm.findFragmentByTag(savedFragmentTag);
+        if (f == null) {
+            if (savedFragmentTag.equals(FRAGMENT_EVENTS)) {
+                f = new MainPageFragment();
+            } else {
+                f = new JournalFragment();
+            }
+        }
+        return f;
     }
 
     @Override
@@ -74,7 +114,15 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(KEY_SELECTED_DRAWER_ITEM, mSelectedDrawerItem);
+        outState.putString(KEY_CUR_FRAGMENT, mCurrentFragmentTag);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        //TODO implement inflating different menus depending on current fragment
         getMenuInflater().inflate(R.menu.main_activity_menu, menu);
         return true;
     }
@@ -100,6 +148,31 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+        if(position == mSelectedDrawerItem) {
+            return;
+        }
+        mSelectedDrawerItem = position;
+        mDrawerLayout.closeDrawers();
+        switch(mSelectedDrawerItem) {
+            case ACTION_EVENTS:
+                mCurrentFragment = new MainPageFragment();
+                replaceCurrentFragment(mCurrentFragment, FRAGMENT_EVENTS);
+                break;
+            case ACTION_JOURNAL:
+                mCurrentFragment = new JournalFragment();
+                replaceCurrentFragment(mCurrentFragment, FRAGMENT_JOURNAL);
+                break;
+        }
+    }
+
+    public JournalMarksFragment.JournalFragmentCallback getJournalCallback() {
+        return (mCurrentFragment instanceof JournalFragment)
+                ? (JournalMarksFragment.JournalFragmentCallback) mCurrentFragment
+                : null;
     }
 
     private void readNewPreferences() {
@@ -135,6 +208,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
                 0,
                 0);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+
         loadUserData();
     }
 
@@ -144,14 +218,12 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         mUserNameView.setText(mName);
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-        switch(position){
-            case ACTION_JOURNAL:
-                Intent intent = new Intent(this, JournalActivity.class);
-                startActivity(intent);
-                break;
-        }
+    private void replaceCurrentFragment(Fragment newFragment, String tag) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_layout, newFragment, tag)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
+                .commit();
     }
 }
 

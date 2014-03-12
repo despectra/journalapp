@@ -1,16 +1,16 @@
-package com.despectra.android.classjournal_new.Activities;
+package com.despectra.android.classjournal_new.Fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.widget.*;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import com.despectra.android.classjournal_new.Adapters.JournalPagerAdapter;
-import com.despectra.android.classjournal_new.Fragments.JournalMarksFragment;
 import com.despectra.android.classjournal_new.R;
 import com.despectra.android.classjournal_new.Utils.AbsListViewsDrawSynchronizer;
 import com.despectra.android.classjournal_new.Utils.Utils;
@@ -21,12 +21,12 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by Dmirty on 17.02.14.
+ * Created by Dmitry on 13.03.14.
  */
-public class JournalActivity extends FragmentActivity implements
+public class JournalFragment extends Fragment implements
         JournalMarksFragment.JournalFragmentCallback, AbsListViewsDrawSynchronizer.Callback, BottomTabWidget.OnTabSelectedListener, AdapterView.OnItemClickListener{
 
-    private static final String TAG = "JOURNAL_ACTIVITY";
+    private static final String TAG = "JOURNAL_FRAGMENT";
 
     public static final int GROUP = 0;
     public static final int MARKS = 1;
@@ -45,14 +45,26 @@ public class JournalActivity extends FragmentActivity implements
     private int mUiState;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_journal);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_journal_full, container, false);
 
-        mContentLayout = (PercentLinearLayout)findViewById(R.id.journal_content_layout);
-        mGroupsList = (ListView)findViewById(R.id.groups_list_view);
+        mContentLayout = (PercentLinearLayout) rootView.findViewById(R.id.journal_content_layout);
+        mGroupsList = (ListView) rootView.findViewById(R.id.groups_list_view);
+        mStudentsList = (ListView) rootView.findViewById(R.id.students_list_view);
+        mPager = (ViewPager) rootView.findViewById(R.id.journal_pager);
+        mPagerAdapter = new JournalPagerAdapter(getFragmentManager());
+        mTabWidget = (BottomTabWidget) rootView.findViewById(R.id.journal_tabs);
+
+        return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+
         mGroupsList.setAdapter(new ArrayAdapter<String>(
-                this,
+                getActivity(),
                 android.R.layout.simple_list_item_1,
                 new String[]{
                         "8",
@@ -76,11 +88,10 @@ public class JournalActivity extends FragmentActivity implements
                         "9 Б"
                 }
         ));
-        mGroupsList.setOnItemClickListener(this);
 
-        mStudentsList = (ListView)findViewById(R.id.students_list_view);
+        mGroupsList.setOnItemClickListener(this);
         mStudentsList.setAdapter(new ArrayAdapter<String>(
-                this,
+                getActivity(),
                 R.layout.journal_student_item,
                 new String[]{"Дубинкинa Анастасия Кузьмевна",
                         "Жиренков Александр Филиппович",
@@ -103,8 +114,9 @@ public class JournalActivity extends FragmentActivity implements
                         "Телицын Никон Всеволодович",
                         "Ягутян Вадим Тимурович"}));
 
-        mPager = (ViewPager)findViewById(R.id.journal_pager);
-        mPagerAdapter = new JournalPagerAdapter(getSupportFragmentManager());
+
+
+
         mPager.setAdapter(mPagerAdapter);
         mPager.setCurrentItem(mPagerAdapter.getCount() - 1);
         mPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener(){
@@ -113,8 +125,8 @@ public class JournalActivity extends FragmentActivity implements
                 super.onPageScrollStateChanged(state);
                 if(state == ViewPager.SCROLL_STATE_DRAGGING) {
                     mIsPagerDragging = true;
-                    List<Fragment> frags = getSupportFragmentManager().getFragments();
-                    for (Fragment frag : frags) {
+                    List<android.support.v4.app.Fragment> frags = getFragmentManager().getFragments();
+                    for (android.support.v4.app.Fragment frag : frags) {
                         if (frag instanceof JournalMarksFragment) {
                             JournalMarksFragment fragment = (JournalMarksFragment) frag;
                             if(fragment.getIndex() != mPager.getCurrentItem()) {
@@ -130,7 +142,7 @@ public class JournalActivity extends FragmentActivity implements
         });
 
         mIsPagerDragging = false;
-        mTabWidget = (BottomTabWidget) findViewById(R.id.journal_tabs);
+
         mTabWidget.setTabsList(Arrays.asList(new String[]{"Класс", "Оценки"}));
         mTabWidget.setCurrentTab(1);
         mTabWidget.setOnTabSelectedListener(this);
@@ -139,8 +151,8 @@ public class JournalActivity extends FragmentActivity implements
     }
 
     @Override
-    protected void onPostResume() {
-        super.onPostResume();
+    public void onResume() {
+        super.onResume();
         mContentLayout.setTranslationXByPercent(-30);
     }
 
@@ -150,7 +162,7 @@ public class JournalActivity extends FragmentActivity implements
     }
 
     private void updateCurrentFragment() {
-        for (Fragment frag : getSupportFragmentManager().getFragments()) {
+        for (Fragment frag : getFragmentManager().getFragments()) {
             if (frag instanceof JournalMarksFragment
                     && ((JournalMarksFragment) frag).getIndex() == mPager.getCurrentItem()) {
                 mCurrentGridFragment = ((JournalMarksFragment) frag);
@@ -164,7 +176,10 @@ public class JournalActivity extends FragmentActivity implements
         if (mListsSync != null) {
             mListsSync.setNewViews(mStudentsList, mCurrentGridFragment.getMarksGridView());
         } else {
-            mListsSync = new AbsListViewsDrawSynchronizer(this, mStudentsList, mCurrentGridFragment.getMarksGridView());
+            mListsSync = new AbsListViewsDrawSynchronizer(
+                    getActivity(),
+                    mStudentsList,
+                    mCurrentGridFragment.getMarksGridView());
             mListsSync.setCallback(this);
         }
     }
