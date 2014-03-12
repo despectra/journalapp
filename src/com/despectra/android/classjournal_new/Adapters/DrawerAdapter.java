@@ -13,22 +13,15 @@ import com.despectra.android.classjournal_new.R;
  */
 public class DrawerAdapter extends BaseAdapter {
 
-    public static final Integer HEADER = 0;
-    public static final Integer ITEM = 1;
-
     private Context mContext;
     private  String[] mData;
-    private int[] mTypes;
     private int mItemLayout;
-    private int mHeaderLayout;
 
-    public DrawerAdapter(Context context, String[] data, int[] types, int itemLayout, int headerLayout) {
+    public DrawerAdapter(Context context, String[] data, int itemLayout) {
         super();
         mContext = context;
         mData = data;
-        mTypes = types;
         mItemLayout = itemLayout;
-        mHeaderLayout = headerLayout;
     }
 
     @Override
@@ -49,27 +42,11 @@ public class DrawerAdapter extends BaseAdapter {
     @Override
     public View getView(int pos, View convertView, ViewGroup parent) {
         View v = convertView;
-        if (isHeader(pos)) {
-            if(v == null || v.getTag() == ITEM) {
-                v = LayoutInflater.from(mContext).inflate(mHeaderLayout, parent, false);
-                v.setEnabled(false);
-                v.setTag(HEADER);
-            }
-        } else if(v == null || v.getTag() == HEADER) {
+        if(v == null) {
             v = LayoutInflater.from(mContext).inflate(mItemLayout, parent, false);
-            v.setTag(ITEM);
         }
-        TextView itemTextView = (TextView)v.findViewById(android.R.id.text1);
+        TextView itemTextView = (TextView)v;
         itemTextView.setText(mData[pos]);
         return v;
-    }
-
-    @Override
-    public boolean isEnabled(int position) {
-        return !isHeader(position);
-    }
-
-    private boolean isHeader(int pos) {
-        return mTypes[pos] == HEADER;
     }
 }

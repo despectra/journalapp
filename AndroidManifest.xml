@@ -26,13 +26,6 @@
 
         <activity
             android:name=".Activities.MainActivity" >
-        </activity>
-
-        <activity
-            android:name=".Activities.JournalActivity"
-            android:label="Journal"
-            android:parentActivityName=".Activities.MainActivity"
-            android:uiOptions="splitActionBarWhenNarrow">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -40,13 +33,16 @@
         </activity>
 
         <activity
-            android:name=".Activities.MainPreferencesActivity"
-            android:label="@string/settings"/>
-
-        <activity
-            android:name=".Activities.PercentLayoutTestActivity">
+            android:name=".Activities.JournalActivity"
+            android:label="Journal"
+            android:parentActivityName=".Activities.MainActivity"
+            android:uiOptions="splitActionBarWhenNarrow">
 
         </activity>
+
+        <activity
+            android:name=".Activities.MainPreferencesActivity"
+            android:label="@string/settings"/>
 
 
         <service

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="login_background">#030303</color>
-    <color name="profile">#cfcfcf</color>
+    <color name="actionbar_color">#ff29a670</color>
+    <color name="actionbar_shadow_color">#ff186945</color>
     <color name="menu_text">#222222</color>
     <color name="gray_85">#ff858585</color>
     <color name="gray_a0">#ffa0a0a0</color>
