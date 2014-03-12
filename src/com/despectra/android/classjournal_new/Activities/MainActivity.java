@@ -10,12 +10,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.*;
 import com.despectra.android.classjournal_new.Adapters.DrawerAdapter;
 import com.despectra.android.classjournal_new.Background.BackgroundService;
 import com.despectra.android.classjournal_new.Fragments.MainPageFragment;
@@ -26,9 +25,12 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 
     public static final String[] USER_DATA_PREFS_KEYS = new String[]{"token", "uid", "name", "surname", "middlename", "level", "avatar"};
 
-    public static final int ACTION_JOURNAL = 3;
-    public static final int ACTION_SCHEDULE = 4;
-    public static final int ACTION_GROUPS = 5;
+    public static final int ACTION_EVENTS = 1;
+    public static final int ACTION_JOURNAL = 2;
+    public static final int ACTION_SCHEDULE = 3;
+    public static final int ACTION_GROUPS = 4;
+    public static final int ACTION_SETTINGS = 5;
+    public static final int ACTION_ABOUT = 6;
 
     private String mToken;
     private int mUserId;
@@ -40,35 +42,24 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
+
     private ListView mDrawer;
+    private RelativeLayout mDrawerUserItemLayout;
+    private ImageView mUserAvatarView;
+    private TextView mUserSurnameView;
+    private TextView mUserNameView;
+
     private MainPageFragment mContentFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        readNewPreferences();
+        initDrawer();
 
-        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
-        mDrawer = (ListView)findViewById(R.id.nav_drawer);
-        mDrawer.setAdapter(new DrawerAdapter(
-                this,
-                new String[]{"Главное", "Домашняя страница", "Категории", "Журнал", "Расписание", "Классы", "Другое", "Настройки", "О программе"},
-                new int[]{0, 1, 0, 1, 1, 1, 0, 1, 1},
-                android.R.layout.simple_list_item_1,
-                R.layout.simple_list_header_1
-        ));
-        mDrawer.setOnItemClickListener(this);
-        mDrawerToggle = new ActionBarDrawerToggle(
-                this,
-                mDrawerLayout,
-                R.drawable.ic_drawer,
-                0,
-                0);
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
-        readNewPreferences();
-        loadAvatar();
 
         mContentFragment = new MainPageFragment();
         FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -120,12 +111,37 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         mLevel = "4096";
         mAvatar = "404";
 
-        getActionBar().setTitle(mSurname);
-        getActionBar().setSubtitle(String.format("%s %s", mName, mMiddlename));
+        getActionBar().setTitle("События");
     }
 
-    private void loadAvatar() {
-        getActionBar().setLogo(R.drawable.test_ava);
+    private void initDrawer() {
+        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        mDrawer = (ListView)findViewById(R.id.nav_drawer);
+        mDrawerUserItemLayout = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.user_drawer_item, null);
+        mDrawer.addHeaderView(mDrawerUserItemLayout);
+        mUserAvatarView = (ImageView) mDrawerUserItemLayout.findViewById(R.id.user_avatar);
+        mUserSurnameView = (TextView) mDrawerUserItemLayout.findViewById(R.id.user_surname);
+        mUserNameView = (TextView) mDrawerUserItemLayout.findViewById(R.id.user_name);
+        mDrawer.setAdapter(new DrawerAdapter(
+                this,
+                new String[]{"События", "Журнал", "Расписание", "Классы", "Настройки", "О программе"},
+                R.layout.drawer_item
+        ));
+        mDrawer.setOnItemClickListener(this);
+        mDrawerToggle = new ActionBarDrawerToggle(
+                this,
+                mDrawerLayout,
+                R.drawable.ic_drawer,
+                0,
+                0);
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        loadUserData();
+    }
+
+    private void loadUserData() {
+        mUserAvatarView.setImageDrawable(getResources().getDrawable(R.drawable.test_ava));
+        mUserSurnameView.setText(mSurname);
+        mUserNameView.setText(mName);
     }
 
     @Override

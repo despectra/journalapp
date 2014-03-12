@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.despectra.android.classjournal_new.Views.PercentLinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:journalviews="http://schemas.android.com/apk/res/com.despectra.android.classjournal_new"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        journalviews:layout_width_percent="10"
+        android:background="@android:color/holo_green_dark"
+        android:text="FIRST LAYOUT"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        journalviews:layout_width_percent="10"
+        android:background="@android:color/holo_blue_dark"
+        android:text="SECOND LAYOUT"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        journalviews:layout_width_percent="10"
+        android:background="@android:color/holo_red_dark"
+        android:text="THIRD LAYOUT"/>
+
+</com.despectra.android.classjournal_new.Views.PercentLinearLayout>

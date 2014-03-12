@@ -4,7 +4,6 @@ package com.despectra.android.classjournal_new.Adapters;
  * Created by Dmirty on 17.02.14.
  */
 import android.content.Context;
-import android.graphics.AvoidXfermode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
