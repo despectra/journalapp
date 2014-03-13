@@ -114,12 +114,10 @@ public class PercentLinearLayout extends ViewGroup {
                 lastX -= childWidth;
             }
         }
-        Log.e(TAG, "View ON LAYOUT");
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        Log.e(TAG, String.format("%f %d %f %d", getTranslationX(), 0, getTranslationX() + mScreenWidth, getMeasuredHeight()));
         canvas.clipRect(mDrawingRect, Region.Op.REPLACE);
         super.onDraw(canvas);
     }

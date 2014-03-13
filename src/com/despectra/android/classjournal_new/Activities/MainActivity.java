@@ -81,6 +81,7 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
             mCurrentFragment = restoreFragment(savedFragmentTag);
             mCurrentFragmentTag = savedFragmentTag;
         } else {
+            restoreDrawerState(ACTION_EVENTS);
             mCurrentFragment = new MainPageFragment();
             mCurrentFragmentTag = FRAGMENT_EVENTS;
         }
@@ -92,6 +93,7 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 
     private void restoreDrawerState(int savedSelectedItem) {
         mDrawer.setSelection(savedSelectedItem);
+        mSelectedDrawerItem = savedSelectedItem;
     }
 
     private Fragment restoreFragment(String savedFragmentTag) {

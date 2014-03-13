@@ -3,6 +3,7 @@ package com.despectra.android.classjournal_new.Fragments;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.*;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
@@ -74,9 +75,15 @@ public class JournalMarksFragment extends Fragment {
         mHeaderGrid.setAdapter(new ArrayAdapter<String>(getActivity(), R.layout.journal_mark_item, headerData));
         mMarksGrid.setAdapter(new MarksRowAdapter(getActivity(), R.layout.journal_mark_item, 6, marksData));
         if (mFragmentCallback != null) {
-            mFragmentCallback.onFragmentCreated();
+            mFragmentCallback.onFragmentCreated(mIndex);
         }
         return v;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.e(TAG, "JOURNAL MARKS FRAGMENT ONDESTROY");
     }
 
     public void setMarksGridScrolling(final int position, final int offset) {
@@ -84,6 +91,6 @@ public class JournalMarksFragment extends Fragment {
     }
 
     public interface JournalFragmentCallback {
-        public void onFragmentCreated();
+        public void onFragmentCreated(int index);
     }
 }

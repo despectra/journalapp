@@ -2,7 +2,10 @@ package com.despectra.android.classjournal_new.Fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,61 +64,17 @@ public class JournalFragment extends Fragment implements
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-
         mGroupsList.setAdapter(new ArrayAdapter<String>(
                 getActivity(),
                 android.R.layout.simple_list_item_1,
-                new String[]{
-                        "8",
-                        "8 A",
-                        "9 Б",
-                        "10 В",
-                        "8",
-                        "8 A",
-                        "9 Б",
-                        "10 В",
-                        "8",
-                        "8 A",
-                        "9 Б",
-                        "10 В",
-                        "8",
-                        "8 A",
-                        "9 Б",
-                        "10 В",
-                        "8",
-                        "8 A",
-                        "9 Б"
-                }
+                Test_getGroups()
         ));
 
         mGroupsList.setOnItemClickListener(this);
         mStudentsList.setAdapter(new ArrayAdapter<String>(
                 getActivity(),
                 R.layout.journal_student_item,
-                new String[]{"Дубинкинa Анастасия Кузьмевна",
-                        "Жиренков Александр Филиппович",
-                        "Кожедубa Кристина Данииловна",
-                        "Чуркинa Мария Якововна",
-                        "Лапуновa Альбина Брониславовна",
-                        "Умберг Харитон Елисеевич",
-                        "Наумовa Агафья Романовна",
-                        "Толбановa Марианна Афанасиевна",
-                        "Лапунов Вячеслав Филимонович",
-                        "Аниканов Артём Андриянович",
-                        "Кваснин Аристарх Епифанович",
-                        "Нагибин Самсон Владиславович",
-                        "Салтанов Павел Прокофиевич",
-                        "Молодцовa Марта Филипповна",
-                        "Коллеровa Изольда Святославовна",
-                        "Абабков Тихон Феликсович",
-                        "Вагинa Инга Никитевна",
-                        "Клецка Наталья Семеновна",
-                        "Телицын Никон Всеволодович",
-                        "Ягутян Вадим Тимурович"}));
-
-
-
+                Test_getStudents()));
 
         mPager.setAdapter(mPagerAdapter);
         mPager.setCurrentItem(mPagerAdapter.getCount() - 1);
@@ -125,8 +84,8 @@ public class JournalFragment extends Fragment implements
                 super.onPageScrollStateChanged(state);
                 if(state == ViewPager.SCROLL_STATE_DRAGGING) {
                     mIsPagerDragging = true;
-                    List<android.support.v4.app.Fragment> frags = getFragmentManager().getFragments();
-                    for (android.support.v4.app.Fragment frag : frags) {
+                    List<Fragment> frags = getFragmentManager().getFragments();
+                    for (Fragment frag : frags) {
                         if (frag instanceof JournalMarksFragment) {
                             JournalMarksFragment fragment = (JournalMarksFragment) frag;
                             if(fragment.getIndex() != mPager.getCurrentItem()) {
@@ -142,11 +101,9 @@ public class JournalFragment extends Fragment implements
         });
 
         mIsPagerDragging = false;
-
         mTabWidget.setTabsList(Arrays.asList(new String[]{"Класс", "Оценки"}));
         mTabWidget.setCurrentTab(1);
         mTabWidget.setOnTabSelectedListener(this);
-
         mUiState = MARKS;
     }
 
@@ -157,8 +114,24 @@ public class JournalFragment extends Fragment implements
     }
 
     @Override
-    public void onFragmentCreated() {
-        updateCurrentFragment();
+    public void onDestroy() {
+        super.onDestroy();
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        for(Fragment f : fm.getFragments()) {
+            if(f instanceof JournalMarksFragment) {
+                ft.remove(f);
+            }
+        }
+        ft.commit();
+        Log.e(TAG, "JOURNAL FRAGMENT ONDESTROY");
+    }
+
+    @Override
+    public void onFragmentCreated(int index) {
+        if(index == mPager.getCurrentItem()) {
+            updateCurrentFragment();
+        }
     }
 
     private void updateCurrentFragment() {
@@ -223,5 +196,52 @@ public class JournalFragment extends Fragment implements
                     });
             mTabWidget.setCurrentTab(1);
         }
+    }
+
+    private String[] Test_getStudents() {
+        return new String[]{"Дубинкинa Анастасия Кузьмевна",
+                "Жиренков Александр Филиппович",
+                "Кожедубa Кристина Данииловна",
+                "Чуркинa Мария Якововна",
+                "Лапуновa Альбина Брониславовна",
+                "Умберг Харитон Елисеевич",
+                "Наумовa Агафья Романовна",
+                "Толбановa Марианна Афанасиевна",
+                "Лапунов Вячеслав Филимонович",
+                "Аниканов Артём Андриянович",
+                "Кваснин Аристарх Епифанович",
+                "Нагибин Самсон Владиславович",
+                "Салтанов Павел Прокофиевич",
+                "Молодцовa Марта Филипповна",
+                "Коллеровa Изольда Святославовна",
+                "Абабков Тихон Феликсович",
+                "Вагинa Инга Никитевна",
+                "Клецка Наталья Семеновна",
+                "Телицын Никон Всеволодович",
+                "Ягутян Вадим Тимурович"};
+    }
+
+    private String[] Test_getGroups() {
+        return new String[]{
+                "8",
+                "8 A",
+                "9 Б",
+                "10 В",
+                "8",
+                "8 A",
+                "9 Б",
+                "10 В",
+                "8",
+                "8 A",
+                "9 Б",
+                "10 В",
+                "8",
+                "8 A",
+                "9 Б",
+                "10 В",
+                "8",
+                "8 A",
+                "9 Б"
+        };
     }
 }
