@@ -1,0 +1,90 @@
+package com.despectra.android.classjournal_new.Views;
+
+import android.content.Context;
+import android.util.AttributeSet;
+import android.view.*;
+import android.widget.*;
+import com.despectra.android.classjournal_new.Adapters.ScheduleRowAdapter;
+import com.despectra.android.classjournal_new.Data.WeekSchedule;
+import com.despectra.android.classjournal_new.R;
+
+/**
+ * Created by Dmitry on 13.03.14.
+ */
+public class WeekScheduleView extends LinearLayout {
+
+    public static final String TAG = "VIEW_Schedule";
+
+    public static final String[] DAYS = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
+
+    private GridView mHeaderView;
+    private ListView mDataView;
+    private ScheduleRowAdapter mScheduleAdapter;
+    private WeekSchedule mSchedule;
+    private View mItemView;
+    private int mHeaderHeight;
+    private int mItemWidth;
+
+    public WeekScheduleView(Context context) {
+        super(context);
+        init(context);
+    }
+
+    public WeekScheduleView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init(context);
+    }
+
+    public WeekScheduleView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        init(context);
+    }
+
+    public void setSchedule(WeekSchedule schedule) {
+        mSchedule = schedule;
+        if (mScheduleAdapter != null) {
+            mScheduleAdapter.setSchedule(schedule);
+        } else {
+            mScheduleAdapter = new ScheduleRowAdapter(getContext(), mSchedule);
+            mScheduleAdapter.setItemClickListener(new ScheduleRowAdapter.ScheduleItemClickListener() {
+                @Override
+                public void onClick(int day, int position) {
+                    Toast.makeText(getContext(), String.format("%d %d", day, position), Toast.LENGTH_SHORT).show();
+                }
+            });
+            mDataView.setAdapter(mScheduleAdapter);
+        }
+    }
+
+    private void init(Context context) {
+        LayoutInflater.from(context).inflate(R.layout.schedule_view, this, true);
+        mHeaderView = (GridView) findViewById(R.id.schedule_top_header);
+        mDataView = (ListView) findViewById(R.id.schedule_container);
+
+        initHeader(context);
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+
+        mHeaderHeight = (w+h) / 38;
+        mItemWidth = (w - mHeaderHeight) / 7;
+        mScheduleAdapter.setLeftHeaderWidth(mHeaderHeight);
+        mScheduleAdapter.setItemWidth(mItemWidth);
+        mHeaderView.setColumnWidth(mItemWidth);
+
+        LinearLayout.LayoutParams headerViewParams = (LayoutParams) mHeaderView.getLayoutParams();
+        headerViewParams.width = w - mHeaderHeight;
+        headerViewParams.height = mHeaderHeight;
+        headerViewParams.weight = 0;
+        mHeaderView.setLayoutParams(headerViewParams);
+    }
+
+    private void initHeader(Context context) {
+        mHeaderView.setEnabled(false);
+        ArrayAdapter<String> headerAdapter = new ArrayAdapter<String>(context, R.layout.small_header_item, DAYS);
+        mHeaderView.setAdapter(headerAdapter);
+    }
+
+}

@@ -5,14 +5,13 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.*;
-import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ListView;
 import com.despectra.android.classjournal_new.Activities.MainActivity;
+import com.despectra.android.classjournal_new.Adapters.HorizontalViewsRowAdapter;
 import com.despectra.android.classjournal_new.Adapters.MarksRowAdapter;
 import com.despectra.android.classjournal_new.R;
-import com.despectra.android.classjournal_new.Utils.Utils;
 
 import java.util.Random;
 
@@ -73,7 +72,7 @@ public class JournalMarksFragment extends Fragment {
             marksData[i] = String.valueOf(i);
         }
         mHeaderGrid.setAdapter(new ArrayAdapter<String>(getActivity(), R.layout.journal_mark_item, headerData));
-        mMarksGrid.setAdapter(new MarksRowAdapter(getActivity(), R.layout.journal_mark_item, 6, marksData));
+        mMarksGrid.setAdapter(new MarksRowAdapter(getActivity(), 6, marksData));
         if (mFragmentCallback != null) {
             mFragmentCallback.onFragmentCreated(mIndex);
         }

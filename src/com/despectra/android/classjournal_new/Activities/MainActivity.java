@@ -19,6 +19,7 @@ import com.despectra.android.classjournal_new.Background.BackgroundService;
 import com.despectra.android.classjournal_new.Fragments.JournalFragment;
 import com.despectra.android.classjournal_new.Fragments.JournalMarksFragment;
 import com.despectra.android.classjournal_new.Fragments.MainPageFragment;
+import com.despectra.android.classjournal_new.Fragments.ScheduleFragment;
 import com.despectra.android.classjournal_new.R;
 import com.despectra.android.classjournal_new.Utils.PrefsManager;
 
@@ -35,6 +36,7 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
 
     public static final String FRAGMENT_EVENTS = "EventsFragment";
     public static final String FRAGMENT_JOURNAL = "JournalFragment";
+    private static final String FRAGMENT_SCHEDULE = "ScheduleFragment";
 
     public static final String KEY_CUR_FRAGMENT = "curFragment";
     public static final String KEY_SELECTED_DRAWER_ITEM = "selectedDrawer";
@@ -81,9 +83,9 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
             mCurrentFragment = restoreFragment(savedFragmentTag);
             mCurrentFragmentTag = savedFragmentTag;
         } else {
-            restoreDrawerState(ACTION_EVENTS);
-            mCurrentFragment = new MainPageFragment();
-            mCurrentFragmentTag = FRAGMENT_EVENTS;
+            restoreDrawerState(ACTION_SCHEDULE);
+            mCurrentFragment = new ScheduleFragment();
+            mCurrentFragmentTag = FRAGMENT_SCHEDULE;
         }
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -168,6 +170,9 @@ public class MainActivity extends FragmentActivity implements AdapterView.OnItem
                 mCurrentFragment = new JournalFragment();
                 replaceCurrentFragment(mCurrentFragment, FRAGMENT_JOURNAL);
                 break;
+            case ACTION_SCHEDULE:
+                mCurrentFragment = new ScheduleFragment();
+                replaceCurrentFragment(mCurrentFragment, FRAGMENT_SCHEDULE);
         }
     }
 

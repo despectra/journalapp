@@ -114,17 +114,25 @@ public class JournalFragment extends Fragment implements
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
         FragmentManager fm = getFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
+        FragmentTransaction ft = null;
+        boolean delete = false;
         for(Fragment f : fm.getFragments()) {
             if(f instanceof JournalMarksFragment) {
+                if (ft == null) {
+                    ft = fm.beginTransaction();
+                }
                 ft.remove(f);
+                delete = true;
             }
         }
-        ft.commit();
-        Log.e(TAG, "JOURNAL FRAGMENT ONDESTROY");
+        if (ft != null && delete) {
+            //TODO fix crash when exit activity
+            ft.commit();
+        }
+        Log.e(TAG, "JOURNAL FRAGMENT ONDESTROYVIEW");
     }
 
     @Override
