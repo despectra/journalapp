@@ -2,5 +2,5 @@
 
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@color/gray240"/>
-    <item android:drawable="@drawable/border_top"/>
+    <item android:drawable="@drawable/border_left_top"/>
 </layer-list>

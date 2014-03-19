@@ -7,24 +7,24 @@
     android:background="@drawable/schedule_time_background">
 
     <TextView
-        android:id="@+id/timeStartView"
+        android:id="@+id/schedule_time_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentLeft="true"
         android:paddingTop="5dp"
-        android:paddingRight="5dp"
+        android:paddingLeft="5dp"
         android:textAppearance="?android:textAppearanceSmall"
         android:text="8:30"/>
 
     <TextView
-        android:id="@+id/timeEndView"
+        android:id="@+id/schedule_time_end"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentLeft="true"
         android:paddingBottom="5dp"
-        android:paddingRight="5dp"
+        android:paddingLeft="5dp"
         android:textAppearance="?android:textAppearanceSmall"
         android:text="10:05"/>
 

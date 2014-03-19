@@ -2,6 +2,7 @@ package com.despectra.android.classjournal_new.Views;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.*;
 import android.widget.*;
 import com.despectra.android.classjournal_new.Adapters.ScheduleRowAdapter;
@@ -17,10 +18,12 @@ public class WeekScheduleView extends LinearLayout {
 
     public static final String[] DAYS = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
 
+    private OnEventSelectedListener mEventSelectedListener;
     private GridView mHeaderView;
     private ListView mDataView;
     private ScheduleRowAdapter mScheduleAdapter;
     private WeekSchedule mSchedule;
+    private String[] mTimeIntervals;
     private View mItemView;
     private int mHeaderHeight;
     private int mItemWidth;
@@ -40,16 +43,23 @@ public class WeekScheduleView extends LinearLayout {
         init(context);
     }
 
-    public void setSchedule(WeekSchedule schedule) {
+    public void setOnEventSelectedListener(OnEventSelectedListener listener) {
+        mEventSelectedListener = listener;
+    }
+
+    public void setSchedule(WeekSchedule schedule, String[] timeIntervals) {
         mSchedule = schedule;
+        mTimeIntervals = timeIntervals;
         if (mScheduleAdapter != null) {
-            mScheduleAdapter.setSchedule(schedule);
+            mScheduleAdapter.setSchedule(mSchedule, mTimeIntervals);
         } else {
-            mScheduleAdapter = new ScheduleRowAdapter(getContext(), mSchedule);
+            mScheduleAdapter = new ScheduleRowAdapter(getContext(), mSchedule, mTimeIntervals);
             mScheduleAdapter.setItemClickListener(new ScheduleRowAdapter.ScheduleItemClickListener() {
                 @Override
                 public void onClick(int day, int position) {
-                    Toast.makeText(getContext(), String.format("%d %d", day, position), Toast.LENGTH_SHORT).show();
+                    if (mEventSelectedListener != null) {
+                        mEventSelectedListener.onEventSelected(day, position);
+                    }
                 }
             });
             mDataView.setAdapter(mScheduleAdapter);
@@ -69,15 +79,16 @@ public class WeekScheduleView extends LinearLayout {
         super.onSizeChanged(w, h, oldw, oldh);
 
         mHeaderHeight = (w+h) / 38;
-        mItemWidth = (w - mHeaderHeight) / 7;
+        mItemWidth = (w - 2 * mHeaderHeight) / 7;
         mScheduleAdapter.setLeftHeaderWidth(mHeaderHeight);
         mScheduleAdapter.setItemWidth(mItemWidth);
         mHeaderView.setColumnWidth(mItemWidth);
 
         LinearLayout.LayoutParams headerViewParams = (LayoutParams) mHeaderView.getLayoutParams();
-        headerViewParams.width = w - mHeaderHeight;
+        headerViewParams.width = w - 2 * mHeaderHeight;
         headerViewParams.height = mHeaderHeight;
         headerViewParams.weight = 0;
+        headerViewParams.rightMargin = mHeaderHeight;
         mHeaderView.setLayoutParams(headerViewParams);
     }
 
@@ -87,4 +98,7 @@ public class WeekScheduleView extends LinearLayout {
         mHeaderView.setAdapter(headerAdapter);
     }
 
+    public interface OnEventSelectedListener {
+        public void onEventSelected(int day, int position);
+    }
 }

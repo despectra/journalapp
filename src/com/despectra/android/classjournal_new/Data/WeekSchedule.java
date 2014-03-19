@@ -54,6 +54,7 @@ public class WeekSchedule {
     private static final int DAYS_IN_WEEK = 7;
 
     private DaySchedule[] mDaySchedules;
+    private String[] mTimeIntervals;
 
     public WeekSchedule() {
         mDaySchedules = new DaySchedule[DAYS_IN_WEEK];
